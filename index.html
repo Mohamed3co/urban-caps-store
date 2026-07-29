@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URBAN CAPS | متجر القبعات</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d0e12;
+      --card-bg: #16181f;
+      --card-border: #262936;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --gold: #f59e0b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 50px; }
+
+    header {
+      background: linear-gradient(180deg, #181b24 0%, var(--bg) 100%);
+      padding: 25px 20px;
+      text-align: center;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .brand-title {
+      font-size: 1.8rem; font-weight: 800; letter-spacing: 1px;
+      background: linear-gradient(90deg, #fff, #93c5fd);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .brand-sub { color: var(--text-muted); font-size: 0.85rem; margin-top: 5px; }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 20px 15px; }
+
+    .delivery-badge {
+      background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.3);
+      border-radius: 10px; padding: 10px; text-align: center; font-size: 0.85rem; color: #93c5fd; margin-bottom: 25px;
+    }
+
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+    .product-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s;
+    }
+    .product-card:hover { transform: translateY(-4px); }
+    .img-wrapper { position: relative; width: 100%; height: 260px; background: #000; }
+    .img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+    .stock-tag {
+      position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(4px); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; color: var(--gold);
+    }
+
+    .card-body { padding: 15px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
+    .prod-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+    .price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .price { font-size: 1.3rem; font-weight: 800; color: #60a5fa; }
+    .btn-buy {
+      width: 100%; background: var(--accent); color: #fff; border: none; padding: 12px;
+      border-radius: 10px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: background 0.2s;
+    }
+    .btn-buy:hover { background: var(--accent-hover); }
+
+    /* Modal / Popup Form */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 15px;
+    }
+    .modal-content {
+      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 18px;
+      width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; padding: 20px; position: relative;
+    }
+    .close-modal {
+      position: absolute; top: 15px; left: 15px; background: #262936; color: var(--text);
+      border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-weight: bold; z-index: 10;
+    }
+
+    /* Gallery Thumbnails */
+    .modal-main-img {
+      width: 100%; height: 250px; object-fit: cover; border-radius: 12px; margin-bottom: 10px; background: #000;
+    }
+    .gallery-thumbs {
+      display: flex; gap: 10px; justify-content: center; margin-bottom: 15px;
+    }
+    .thumb-img {
+      width: 65px; height: 65px; object-fit: cover; border-radius: 8px; border: 2px solid var(--card-border);
+      cursor: pointer; opacity: 0.5; transition: 0.2s;
+    }
+    .thumb-img.active, .thumb-img:hover {
+      border-color: var(--accent); opacity: 1; transform: scale(1.05);
+    }
+
+    form { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+    label { font-size: 0.82rem; color: var(--text-muted); margin-bottom: -4px; }
+    input, select {
+      background: #0f1015; border: 1px solid var(--card-border); color: #fff;
+      padding: 12px; border-radius: 10px; font-size: 0.95rem; outline: none;
+    }
+    input:focus, select:focus { border-color: var(--accent); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand-title">🧢 URBAN CAPS STORE</div>
+    <div class="brand-sub">التوصيل متوفر لجميع الولايات الـ 58 🇩🇿</div>
+  </header>
+
+  <div class="container">
+    <div class="delivery-badge">
+      🚚 اضغط على القبعة لرؤية جميع الزوايا (أمام، جنب، خلف) وتأكيد الطلب!
+    </div>
+
+    <div id="products-container" class="products-grid">
+      <div style="text-align:center; grid-column: 1/-1; padding: 50px; color: var(--text-muted);">جاري تحميل القبعات...</div>
+    </div>
+  </div>
+
+  <!-- Modal Checkout -->
+  <div id="order-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="close-modal" onclick="closeModal()">✕</button>
+      
+      <!-- Gallery Display -->
+      <img id="modal-main-photo" class="modal-main-img" src="" alt="Cap View">
+      <div id="modal-thumbs-container" class="gallery-thumbs"></div>
+
+      <h3 id="modal-prod-title" style="margin-bottom: 2px;">تأكيد الطلب</h3>
+      <p id="modal-prod-price" style="color: #60a5fa; font-weight: bold; font-size: 1.1rem; margin-bottom: 10px;"></p>
+
+      <form id="orderForm" onsubmit="submitOrder(event)">
+        <input type="hidden" id="form-prod-id">
+        <input type="hidden" id="form-prod-name">
+        <input type="hidden" id="form-prod-price">
+
+        <div>
+          <label>المقاس المطلوب:</label>
+          <select id="form-size" required></select>
+        </div>
+
+        <div class="form-row">
+          <div>
+            <label>الكمية:</label>
+            <input type="number" id="form-qty" value="1" min="1" onchange="calculateTotal()" required>
+          </div>
+          <div>
+            <label>نوع التوصيل:</label>
+            <select id="form-delivery">
+              <option value="Stop Desk">مكتب Stop Desk</option>
+              <option value="Home">إلى باب المنزل</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label>الاسم واللقب الكامل:</label>
+          <input type="text" id="form-name" placeholder="مثال: محمد علي" required>
+        </div>
+
+        <div>
+          <label>رقم الهاتف:</label>
+          <input type="tel" id="form-phone" placeholder="06XXXXXXXX" required>
+        </div>
+
+        <div class="form-row">
+          <div>
+            <label>الولاية:</label>
+            <input type="text" id="form-wilaya" placeholder="مثال: وهران" required>
+          </div>
+          <div>
+            <label>البلدية:</label>
+            <input type="text" id="form-commune" placeholder="مثال: بئر الجير" required>
+          </div>
+        </div>
+
+        <div>
+          <label>العنوان التفصيلي:</label>
+          <input type="text" id="form-address" placeholder="الحي أو الشارع..." required>
+        </div>
+
+        <button type="submit" id="btn-submit" class="btn-buy" style="margin-top: 10px;">
+          تأكيد الطلب (<span id="total-price-display">0</span> دج)
+        </button>
+      </form>
+    </div>
+  </div>
+
+<script>
+  const API_URL = "https://script.google.com/macros/s/AKfycbxvgaFaIfpOPP2HdPjlTVM4yhU4OsPw7qL6RXUmbVajhVqsdLqmstdK7oFdEBJ7RQ9l/exec";
+  let loadedProducts = [];
+
+  async function fetchProducts() {
+    try {
+      const res = await fetch(API_URL);
+      loadedProducts = await res.json();
+      renderProducts();
+    } catch (err) {
+      document.getElementById('products-container').innerHTML = '<p style="text-align:center; grid-column: 1/-1;">عذراً، تعذر تحميل المنتجات حالياً.</p>';
+    }
+  }
+
+  function renderProducts() {
+    const container = document.getElementById('products-container');
+    container.innerHTML = '';
+
+    if (!loadedProducts || loadedProducts.length === 0) {
+      container.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">لا توجد قبعات متوفرة حالياً.</p>';
+      return;
+    }
+
+    loadedProducts.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      
+      const mainImg = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/300?text=Cap';
+      const stockBadge = p.stock > 0 ? `متوفر (${p.stock})` : 'نفذت الكمية';
+      const isOutOfStock = p.stock <= 0;
+
+      card.innerHTML = `
+        <div class="img-wrapper">
+          <img src="${mainImg}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300x300/16181f/9ca3af?text=Cap+Image'">
+          <span class="stock-tag">${stockBadge}</span>
+        </div>
+        <div class="card-body">
+          <div>
+            <div class="prod-title">${p.name}</div>
+            <div class="price-row">
+              <span class="price">${p.price} دج</span>
+            </div>
+          </div>
+          <button class="btn-buy" ${isOutOfStock ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''} onclick="openOrderModal('${p.id}')">
+            ${isOutOfStock ? 'نفذت الكمية' : 'عرض والتفاصيل 🛒'}
+          </button>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function openOrderModal(productId) {
+    const prod = loadedProducts.find(p => p.id == productId);
+    if (!prod) return;
+
+    document.getElementById('form-prod-id').value = prod.id;
+    document.getElementById('form-prod-name').value = prod.name;
+    document.getElementById('form-prod-price').value = prod.price;
+
+    document.getElementById('modal-prod-title').innerText = prod.name;
+    document.getElementById('modal-prod-price').innerText = prod.price + ' دج';
+
+    // Gallery Logic
+    const images = (prod.images && prod.images.length > 0) ? prod.images : ['https://via.placeholder.com/300'];
+    const mainPhoto = document.getElementById('modal-main-photo');
+    mainPhoto.src = images[0];
+
+    const thumbsContainer = document.getElementById('modal-thumbs-container');
+    thumbsContainer.innerHTML = '';
+
+    images.forEach((imgUrl, index) => {
+      const thumb = document.createElement('img');
+      thumb.src = imgUrl;
+      thumb.className = `thumb-img ${index === 0 ? 'active' : ''}`;
+      thumb.onclick = function() {
+        mainPhoto.src = imgUrl;
+        document.querySelectorAll('.thumb-img').forEach(t => t.classList.remove('active'));
+        thumb.classList.add('active');
+      };
+      thumbsContainer.appendChild(thumb);
+    });
+
+    // Sizes Logic
+    const sizeSelect = document.getElementById('form-size');
+    sizeSelect.innerHTML = '';
+    prod.sizes.forEach(s => {
+      sizeSelect.innerHTML += `<option value="${s}">${s}</option>`;
+    });
+
+    document.getElementById('form-qty').value = 1;
+    document.getElementById('form-qty').max = prod.stock;
+    calculateTotal();
+
+    document.getElementById('order-modal').style.display = 'flex';
+  }
+
+  function closeModal() {
+    document.getElementById('order-modal').style.display = 'none';
+  }
+
+  function calculateTotal() {
+    const unitPrice = Number(document.getElementById('form-prod-price').value) || 0;
+    const qty = Number(document.getElementById('form-qty').value) || 1;
+    document.getElementById('total-price-display').innerText = unitPrice * qty;
+  }
+
+  async function submitOrder(e) {
+    e.preventDefault();
+    const btn = document.getElementById('btn-submit');
+    btn.disabled = true;
+    btn.innerText = 'جاري تسجيل الطلب...';
+
+    const unitPrice = Number(document.getElementById('form-prod-price').value);
+    const qty = Number(document.getElementById('form-qty').value);
+
+    const payload = {
+      productId: document.getElementById('form-prod-id').value,
+      productName: document.getElementById('form-prod-name').value,
+      size: document.getElementById('form-size').value,
+      quantity: qty,
+      fullName: document.getElementById('form-name').value,
+      phone: document.getElementById('form-phone').value,
+      wilaya: document.getElementById('form-wilaya').value,
+      commune: document.getElementById('form-commune').value,
+      address: document.getElementById('form-address').value,
+      deliveryType: document.getElementById('form-delivery').value,
+      totalPrice: unitPrice * qty
+    };
+
+    try {
+      await fetch(API_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      alert('✅ تم تسجيل طلبك بنجاح! سنتصل بك فوراً لتأكيد التوصيل.');
+      closeModal();
+      document.getElementById('orderForm').reset();
+      fetchProducts();
+    } catch (err) {
+      alert('❌ حدث خطأ، يرجى المحاولة مرة أخرى.');
+    } finally {
+      btn.disabled = false;
+      calculateTotal();
+    }
+  }
+
+  fetchProducts();
+</script>
+</body>
+</html>
+
