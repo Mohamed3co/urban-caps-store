@@ -19,25 +19,30 @@
     .cat-btn { background: #1e1e1e; border: 1px solid #444; color: #aaa; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.9rem; font-weight: 600; white-space: nowrap; transition: 0.2s; }
     .cat-btn.active { background: #00e676; color: #000; border-color: #00e676; }
 
-    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+    /* Temu Style Grid */
+    .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    @media (min-width: 600px) {
+      .products-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 18px; }
+    }
 
-    .card { background: #1e1e1e; border-radius: 12px; overflow: hidden; border: 1px solid #333; display: flex; flex-direction: column; }
-    .card-img { width: 100%; height: 250px; object-fit: cover; background: #2a2a2a; }
-    .card-body { padding: 15px; display: flex; flex-direction: column; flex-grow: 1; }
-    .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
-    .card-price { color: #00e676; font-size: 1.2rem; font-weight: 800; margin-bottom: 15px; }
-    .btn-view { background: #00e676; color: #000; font-weight: 700; border: none; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; margin-top: auto; text-align: center; font-size: 1rem; }
+    .card { background: #1e1e1e; border-radius: 10px; overflow: hidden; border: 1px solid #333; display: flex; flex-direction: column; transition: transform 0.2s; }
+    .card:hover { border-color: #555; }
+    .card-img { width: 100%; height: 180px; object-fit: cover; background: #2a2a2a; }
+    .card-body { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; }
+    .card-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; color: #fff; }
+    .card-price { color: #00e676; font-size: 1.1rem; font-weight: 800; margin-bottom: 10px; }
+    .btn-view { background: #00e676; color: #000; font-weight: 700; border: none; padding: 8px; border-radius: 6px; cursor: pointer; width: 100%; margin-top: auto; text-align: center; font-size: 0.9rem; }
 
     /* Modal Styles */
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 1000; justify-content: center; align-items: center; padding: 15px; overflow-y: auto; }
     .modal-content { background: #1e1e1e; border-radius: 15px; width: 100%; max-width: 500px; padding: 20px; max-height: 90vh; overflow-y: auto; position: relative; border: 1px solid #333; }
     .close-btn { position: absolute; top: 15px; left: 15px; font-size: 1.5rem; color: #aaa; cursor: pointer; background: none; border: none; }
 
-    .main-photo-container { width: 100%; height: 280px; margin-bottom: 12px; border-radius: 10px; overflow: hidden; background: #2a2a2a; }
+    .main-photo-container { width: 100%; height: 260px; margin-bottom: 12px; border-radius: 10px; overflow: hidden; background: #2a2a2a; }
     .main-photo { width: 100%; height: 100%; object-fit: cover; }
 
-    .thumbs-container { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
-    .thumb-img { width: 65px; height: 65px; object-fit: cover; border-radius: 8px; cursor: pointer; border: 2px solid #444; opacity: 0.6; transition: 0.2s; }
+    .thumbs-container { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
+    .thumb-img { width: 55px; height: 55px; object-fit: cover; border-radius: 6px; cursor: pointer; border: 2px solid #444; opacity: 0.6; transition: 0.2s; flex-shrink: 0; }
     .thumb-img.active { border-color: #00e676; opacity: 1; }
 
     .form-group { margin-bottom: 12px; }
@@ -45,7 +50,6 @@
     .form-control { width: 100%; padding: 10px; background: #2a2a2a; border: 1px solid #444; color: #fff; border-radius: 8px; font-size: 0.95rem; }
     .form-control:focus { border-color: #00e676; outline: none; }
 
-    .help-text { font-size: 0.78rem; color: #00e676; margin-top: 4px; display: block; }
     .stock-warning { font-size: 0.78rem; color: #ff9800; margin-top: 4px; display: block; }
 
     .total-box-info { background: #2a2a2a; padding: 8px 12px; border-radius: 8px; text-align: center; margin-top: 15px; font-size: 0.9rem; color: #aaa; }
@@ -65,7 +69,7 @@
   <div class="container">
     <div id="categories-bar" class="categories-bar"></div>
     <div id="products-grid" class="products-grid">
-      <p style="text-align:center; width:100%; grid-column: 1/-1;">جاري تحميل المنتجات...</p>
+      <p style="text-align:center; width:100%; grid-column: 1/-1;">جاري تحميل القبعات...</p>
     </div>
   </div>
 
@@ -75,23 +79,18 @@
       <button class="close-btn" onclick="closeModal()">&times;</button>
       
       <div class="main-photo-container">
-        <img id="main-photo" class="main-photo" src="" alt="صورة القبعة">
+        <img id="main-photo" class="main-photo" src="" alt="قبعة مسطحة">
       </div>
       
       <div id="thumbs-container" class="thumbs-container"></div>
 
-      <h2 id="modal-title" style="margin-bottom: 5px;"></h2>
+      <h2 id="modal-title" style="margin-bottom: 5px;">قبعة مسطحة</h2>
       <p id="modal-price" style="color: #00e676; font-weight: 700; margin-bottom: 15px;"></p>
 
       <form id="orderform" onsubmit="submitOrder(event)">
         <input type="hidden" id="form-prod-id">
-        <input type="hidden" id="form-prod-name">
+        <input type="hidden" id="form-secret-name">
         <input type="hidden" id="form-prod-price">
-
-        <div class="form-group" id="variants-group" style="display:none;">
-          <label>اختر الموديل / اللون:</label>
-          <select id="form-variant" class="form-control" onchange="onVariantChange()"></select>
-        </div>
 
         <div style="display: flex; gap: 10px;">
           <div class="form-group" style="flex: 1;">
@@ -208,7 +207,7 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbzIEQ5X48JKOBOu441QMbkaIQIBeF2GF7Z6HIb7nx8-_qcCspc2jNtNDNOWcDGeMydI/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbxMhO_W2WCsryKGczuJKpGdf6dubrg9hndLx6nhBRmOVCiRNw1hPlsabTW4boh7N-6a/exec";
 
     const dhdPricing = {
       1: { home: 1100, desk: 600 }, 2: { home: 700, desk: 400 }, 3: { home: 900, desk: 500 },
@@ -285,11 +284,11 @@
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
-          <img class="card-img" src="${mainImg}" alt="${p.name}">
+          <img class="card-img" src="${mainImg}" alt="قبعة مسطحة">
           <div class="card-body">
-            <div class="card-title">${p.name}</div>
+            <div class="card-title">${p.displayName}</div>
             <div class="card-price">${p.price} دج</div>
-            <button class="btn-view" onclick="openModal(${p.id})">عرض والتفاصيل 🛒</button>
+            <button class="btn-view" onclick="openModal(${p.id})">عرض الموديلات 🛒</button>
           </div>
         `;
         grid.appendChild(card);
@@ -302,23 +301,10 @@
       currentSelectedProduct = prod;
 
       document.getElementById('form-prod-id').value = prod.id;
-      document.getElementById('form-prod-name').value = prod.name;
+      document.getElementById('form-secret-name').value = prod.secretName;
       document.getElementById('form-prod-price').value = prod.price;
-      document.getElementById('modal-title').innerText = prod.name;
+      document.getElementById('modal-title').innerText = prod.displayName;
       document.getElementById('modal-price').innerText = `${prod.price} دج`;
-
-      const variantsGroup = document.getElementById('variants-group');
-      const variantSelect = document.getElementById('form-variant');
-      
-      if (prod.variants && prod.variants.length > 0) {
-        variantsGroup.style.display = 'block';
-        variantSelect.innerHTML = '';
-        prod.variants.forEach((v, idx) => {
-          variantSelect.innerHTML += `<option value="${idx}">${v.name}</option>`;
-        });
-      } else {
-        variantsGroup.style.display = 'none';
-      }
 
       updateModalImagesAndSizes();
 
@@ -328,10 +314,6 @@
       deliverySelect.disabled = true;
 
       document.getElementById('order-modal').style.display = 'flex';
-    }
-
-    function onVariantChange() {
-      updateModalImagesAndSizes();
     }
 
     function parseSizesString(sizesInput) {
@@ -345,7 +327,6 @@
         });
       }
 
-      // فصل المقاسات بالفاصلة أو الفاصلة الملتصقة
       let parts = sizesInput.toString().split(',');
       parts.forEach(part => {
         let parsed = parseSingleSizeText(part.trim());
@@ -358,9 +339,7 @@
     function parseSingleSizeText(text) {
       if (!text) return null;
       let cleanText = text.trim();
-
-      // استخراج أي أرقام بين أقواس بغض النظر عن موقعها (سواء '(1)57' أو '57(1)')
-      let stock = 10; // القيمة الافتراضية إذا لم توجد أقواس
+      let stock = 10;
       let sizeName = cleanText;
 
       let matchBracketFront = cleanText.match(/^\((\d+)\)(.+)$/);
@@ -379,15 +358,8 @@
 
     function updateModalImagesAndSizes() {
       const prod = currentSelectedProduct;
-      let activeImages = prod.images || [prod.image];
+      let activeImages = prod.images && prod.images.length > 0 ? prod.images : [prod.image];
       let rawSizes = prod.sizes;
-
-      const variantIdx = document.getElementById('form-variant').value;
-      if (prod.variants && prod.variants[variantIdx]) {
-        const v = prod.variants[variantIdx];
-        if (v.images) activeImages = v.images;
-        if (v.sizes) rawSizes = v.sizes;
-      }
 
       const mainPhoto = document.getElementById('main-photo');
       const thumbsContainer = document.getElementById('thumbs-container');
@@ -508,17 +480,13 @@
       const deliverySelect = document.getElementById('form-delivery');
       const deliveryText = deliverySelect.options[deliverySelect.selectedIndex].text;
 
-      const variantSelect = document.getElementById('form-variant');
-      let variantName = variantSelect.options[variantSelect.selectedIndex] ? variantSelect.options[variantSelect.selectedIndex].text : '';
-
       const subtotal = unitPrice * qty;
       const shippingCost = Number(document.getElementById('shipping-cost-display').innerText);
       const totalPrice = subtotal + shippingCost;
 
       const payload = {
         productId: document.getElementById('form-prod-id').value,
-        productName: document.getElementById('form-prod-name').value,
-        variant: variantName,
+        secretName: document.getElementById('form-secret-name').value, // الاسم الحقيقي للشيت
         size: selectedOption.value,
         quantity: qty,
         fullName: document.getElementById('form-name').value,
