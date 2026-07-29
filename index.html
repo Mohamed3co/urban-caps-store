@@ -63,9 +63,7 @@
   </header>
 
   <div class="container">
-    <!-- شريط الفئات ديناميكياً -->
     <div id="categories-bar" class="categories-bar"></div>
-
     <div id="products-grid" class="products-grid">
       <p style="text-align:center; width:100%; grid-column: 1/-1;">جاري تحميل المنتجات...</p>
     </div>
@@ -195,7 +193,6 @@
           <select id="form-delivery" class="form-control" onchange="calculateTotal()" required disabled>
             <option value="" disabled selected>-- اختر الولاية أولاً ليتحدد السعر --</option>
           </select>
-          <span class="help-text">💡 <b>التوصيل للمكتب:</b> تستلم طردك بنفسك من مقر شركة التوصيل (DHD) في ولايتك.</span>
         </div>
 
         <div class="total-box-info">
@@ -257,17 +254,14 @@
       const categories = [...new Set(products.map(p => p.category || 'أخرى'))];
 
       let html = `<button class="cat-btn ${activeCategory === 'all' ? 'active' : ''}" onclick="filterAndRenderProducts('all')">الكل</button>`;
-      
       categories.forEach(cat => {
         html += `<button class="cat-btn ${activeCategory === cat ? 'active' : ''}" onclick="filterAndRenderProducts('${cat}')">${cat}</button>`;
       });
-
       bar.innerHTML = html;
     }
 
     function filterAndRenderProducts(category) {
       activeCategory = category;
-      
       document.querySelectorAll('.cat-btn').forEach(btn => {
         if (btn.innerText === category || (category === 'all' && btn.innerText === 'الكل')) {
           btn.classList.add('active');
@@ -275,7 +269,6 @@
           btn.classList.remove('active');
         }
       });
-
       const filtered = category === 'all' ? allProducts : allProducts.filter(p => (p.category || 'أخرى') === category);
       renderProducts(filtered);
     }
@@ -283,15 +276,12 @@
     function renderProducts(products) {
       const grid = document.getElementById('products-grid');
       grid.innerHTML = '';
-
       if (products.length === 0) {
         grid.innerHTML = '<p style="text-align:center; width:100%; grid-column: 1/-1; color:#aaa;">لا توجد منتجات في هذه الفئة</p>';
         return;
       }
-
       products.forEach(p => {
         const mainImg = (p.images && p.images.length > 0) ? p.images[0] : (p.image || '');
-        
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
@@ -355,6 +345,7 @@
         });
       }
 
+      // فصل المقاسات بالفاصلة أو الفاصلة الملتصقة
       let parts = sizesInput.toString().split(',');
       parts.forEach(part => {
         let parsed = parseSingleSizeText(part.trim());
@@ -364,22 +355,26 @@
       return result;
     }
 
-    function parseSingleSizeTest(text) {
-      return text;
-    }
-
     function parseSingleSizeText(text) {
-      // يدعم الآن الصيغة العادية مثل 56(1) أو (1)56 أو 56 (1) بكل مرونة
-      let match1 = text.match(/^(.*?)\s*\((\d+)\)$/);
-      let match2 = text.match(/^\((\d+)\)\s*(.*)$/);
+      if (!text) return null;
+      let cleanText = text.trim();
 
-      if (match1) {
-        return { size: match1[1].trim(), stock: parseInt(match1[2], 10) };
-      } else if (match2) {
-        return { size: match2[2].trim(), stock: parseInt(match2[1], 10) };
-      } else {
-        return { size: text.trim(), stock: 10 };
+      // استخراج أي أرقام بين أقواس بغض النظر عن موقعها (سواء '(1)57' أو '57(1)')
+      let stock = 10; // القيمة الافتراضية إذا لم توجد أقواس
+      let sizeName = cleanText;
+
+      let matchBracketFront = cleanText.match(/^\((\d+)\)(.+)$/);
+      let matchBracketBack = cleanText.match(/^(.+?)\((\d+)\)$/);
+
+      if (matchBracketFront) {
+        stock = parseInt(matchBracketFront[1], 10);
+        sizeName = matchBracketFront[2].trim();
+      } else if (matchBracketBack) {
+        sizeName = matchBracketBack[1].trim();
+        stock = parseInt(matchBracketBack[2], 10);
       }
+
+      return { size: sizeName, stock: stock };
     }
 
     function updateModalImagesAndSizes() {
