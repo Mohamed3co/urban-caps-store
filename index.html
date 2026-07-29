@@ -355,7 +355,7 @@
         });
       }
 
-      let parts = sizesInput.split(',');
+      let parts = sizesInput.toString().split(',');
       parts.forEach(part => {
         let parsed = parseSingleSizeText(part.trim());
         if (parsed) result.push(parsed);
@@ -367,9 +367,9 @@
     function parseSingleSizeText(text) {
       let match = text.match(/^(.*?)\s*\((\d+)\)$/);
       if (match) {
-        return { size: match[1].trim(), stock: parseInt(match[2]) };
+        return { size: match[1].trim(), stock: parseInt(match[2], 10) };
       } else {
-        return { size: text.trim(), stock: 10 };
+        return { size: text.trim(), stock: 0 };
       }
     }
 
