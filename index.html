@@ -364,12 +364,21 @@
       return result;
     }
 
+    function parseSingleSizeTest(text) {
+      return text;
+    }
+
     function parseSingleSizeText(text) {
-      let match = text.match(/^(.*?)\s*\((\d+)\)$/);
-      if (match) {
-        return { size: match[1].trim(), stock: parseInt(match[2], 10) };
+      // يدعم الآن الصيغة العادية مثل 56(1) أو (1)56 أو 56 (1) بكل مرونة
+      let match1 = text.match(/^(.*?)\s*\((\d+)\)$/);
+      let match2 = text.match(/^\((\d+)\)\s*(.*)$/);
+
+      if (match1) {
+        return { size: match1[1].trim(), stock: parseInt(match1[2], 10) };
+      } else if (match2) {
+        return { size: match2[2].trim(), stock: parseInt(match2[1], 10) };
       } else {
-        return { size: text.trim(), stock: 0 };
+        return { size: text.trim(), stock: 10 };
       }
     }
 
