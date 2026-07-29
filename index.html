@@ -13,6 +13,12 @@
     header p { color: #aaa; font-size: 0.9rem; margin-top: 5px; }
 
     .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
+
+    /* Categories Filter Bar */
+    .categories-bar { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; justify-content: center; }
+    .cat-btn { background: #1e1e1e; border: 1px solid #444; color: #aaa; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.9rem; font-weight: 600; white-space: nowrap; transition: 0.2s; }
+    .cat-btn.active { background: #00e676; color: #000; border-color: #00e676; }
+
     .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
 
     .card { background: #1e1e1e; border-radius: 12px; overflow: hidden; border: 1px solid #333; display: flex; flex-direction: column; }
@@ -40,6 +46,7 @@
     .form-control:focus { border-color: #00e676; outline: none; }
 
     .help-text { font-size: 0.78rem; color: #00e676; margin-top: 4px; display: block; }
+    .stock-warning { font-size: 0.78rem; color: #ff9800; margin-top: 4px; display: block; }
 
     .total-box-info { background: #2a2a2a; padding: 8px 12px; border-radius: 8px; text-align: center; margin-top: 15px; font-size: 0.9rem; color: #aaa; }
     .total-box { background: #1a2e22; border: 1px solid #00e676; padding: 12px; border-radius: 8px; text-align: center; margin-top: 8px; font-size: 1.1rem; font-weight: 700; color: #00e676; }
@@ -56,6 +63,9 @@
   </header>
 
   <div class="container">
+    <!-- شريط الفئات ديناميكياً -->
+    <div id="categories-bar" class="categories-bar"></div>
+
     <div id="products-grid" class="products-grid">
       <p style="text-align:center; width:100%; grid-column: 1/-1;">جاري تحميل المنتجات...</p>
     </div>
@@ -67,7 +77,7 @@
       <button class="close-btn" onclick="closeModal()">&times;</button>
       
       <div class="main-photo-container">
-        <img id="main-photo" class="main-photo" src="" alt="صورة المنتج">
+        <img id="main-photo" class="main-photo" src="" alt="صورة القبعة">
       </div>
       
       <div id="thumbs-container" class="thumbs-container"></div>
@@ -80,14 +90,20 @@
         <input type="hidden" id="form-prod-name">
         <input type="hidden" id="form-prod-price">
 
+        <div class="form-group" id="variants-group" style="display:none;">
+          <label>اختر الموديل / اللون:</label>
+          <select id="form-variant" class="form-control" onchange="onVariantChange()"></select>
+        </div>
+
         <div style="display: flex; gap: 10px;">
           <div class="form-group" style="flex: 1;">
             <label>المقاس:</label>
-            <select id="form-size" class="form-control" required></select>
+            <select id="form-size" class="form-control" onchange="onSizeChange()" required></select>
           </div>
           <div class="form-group" style="flex: 1;">
             <label>الكمية:</label>
             <input type="number" id="form-qty" class="form-control" value="1" min="1" onchange="calculateTotal()" oninput="calculateTotal()" required>
+            <span id="stock-hint" class="stock-warning"></span>
           </div>
         </div>
 
@@ -197,82 +213,81 @@
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbzIEQ5X48JKOBOu441QMbkaIQIBeF2GF7Z6HIb7nx8-_qcCspc2jNtNDNOWcDGeMydI/exec";
 
-    // أسعار شركة DHD مضبوطة من الصور (المنزل / المكتب)
     const dhdPricing = {
-      1: { home: 1100, desk: 600 },
-      2: { home: 700, desk: 400 },
-      3: { home: 900, desk: 500 },
-      4: { home: 900, desk: 400 },
-      5: { home: 900, desk: 400 },
-      6: { home: 800, desk: 400 },
-      7: { home: 900, desk: 500 },
-      8: { home: 1000, desk: 600 },
-      9: { home: 600, desk: 400 },
-      10: { home: 700, desk: 400 },
-      11: { home: 1100, desk: 600 },
-      12: { home: 1000, desk: 400 },
-      13: { home: 650, desk: 400 },
-      14: { home: 900, desk: 400 },
-      15: { home: 700, desk: 400 },
-      16: { home: 500, desk: 400 },
-      17: { home: 900, desk: 500 },
-      18: { home: 800, desk: 400 },
-      19: { home: 700, desk: 400 },
-      20: { home: 650, desk: 400 },
-      21: { home: 800, desk: 400 },
-      22: { home: 500, desk: 200 },
-      23: { home: 800, desk: 400 },
-      24: { home: 900, desk: 400 },
-      25: { home: 800, desk: 400 },
-      26: { home: 650, desk: 400 },
-      27: { home: 650, desk: 400 },
-      28: { home: 900, desk: 400 },
-      29: { home: 650, desk: 400 },
-      30: { home: 900, desk: 400 },
-      31: { home: 650, desk: 400 },
-      32: { home: 700, desk: 500 },
-      33: { home: 1300, desk: 500 },
-      34: { home: 700, desk: 400 },
-      35: { home: 700, desk: 400 },
-      36: { home: 900, desk: 400 },
-      37: { home: 1300, desk: 600 },
-      38: { home: 800, desk: 400 },
-      39: { home: 1000, desk: 500 },
-      40: { home: 900, desk: 500 },
-      41: { home: 900, desk: 500 },
-      42: { home: 700, desk: 400 },
-      43: { home: 800, desk: 400 },
-      44: { home: 650, desk: 400 },
-      45: { home: 700, desk: 500 },
-      46: { home: 650, desk: 400 },
-      47: { home: 1000, desk: 500 },
-      48: { home: 650, desk: 400 },
-      49: { home: 1100, desk: 600 },
-      50: { home: 1000, desk: 500 },
-      51: { home: 900, desk: 500 },
-      52: { home: 1100, desk: 0 },
-      53: { home: 1100, desk: 600 },
-      55: { home: 900, desk: 500 },
+      1: { home: 1100, desk: 600 }, 2: { home: 700, desk: 400 }, 3: { home: 900, desk: 500 },
+      4: { home: 900, desk: 400 }, 5: { home: 900, desk: 400 }, 6: { home: 800, desk: 400 },
+      7: { home: 900, desk: 500 }, 8: { home: 1000, desk: 600 }, 9: { home: 600, desk: 400 },
+      10: { home: 700, desk: 400 }, 11: { home: 1100, desk: 600 }, 12: { home: 1000, desk: 400 },
+      13: { home: 650, desk: 400 }, 14: { home: 900, desk: 400 }, 15: { home: 700, desk: 400 },
+      16: { home: 500, desk: 400 }, 17: { home: 900, desk: 500 }, 18: { home: 800, desk: 400 },
+      19: { home: 700, desk: 400 }, 20: { home: 650, desk: 400 }, 21: { home: 800, desk: 400 },
+      22: { home: 500, desk: 200 }, 23: { home: 800, desk: 400 }, 24: { home: 900, desk: 400 },
+      25: { home: 800, desk: 400 }, 26: { home: 650, desk: 400 }, 27: { home: 650, desk: 400 },
+      28: { home: 900, desk: 400 }, 29: { home: 650, desk: 400 }, 30: { home: 900, desk: 400 },
+      31: { home: 650, desk: 400 }, 32: { home: 700, desk: 500 }, 33: { home: 1300, desk: 500 },
+      34: { home: 700, desk: 400 }, 35: { home: 700, desk: 400 }, 36: { home: 900, desk: 400 },
+      37: { home: 1300, desk: 600 }, 38: { home: 800, desk: 400 }, 39: { home: 1000, desk: 500 },
+      40: { home: 900, desk: 500 }, 41: { home: 900, desk: 500 }, 42: { home: 700, desk: 400 },
+      43: { home: 800, desk: 400 }, 44: { home: 650, desk: 400 }, 45: { home: 700, desk: 500 },
+      46: { home: 650, desk: 400 }, 47: { home: 1000, desk: 500 }, 48: { home: 650, desk: 400 },
+      49: { home: 1100, desk: 600 }, 50: { home: 1000, desk: 500 }, 51: { home: 900, desk: 500 },
+      52: { home: 1100, desk: 0 }, 53: { home: 1100, desk: 600 }, 55: { home: 900, desk: 500 },
       57: { home: 900, desk: 0 }
     };
 
     let allProducts = [];
+    let currentSelectedProduct = null;
+    let activeCategory = 'all';
 
     async function fetchProducts() {
       try {
         const res = await fetch(API_URL);
         const data = await res.json();
         allProducts = data;
-        renderProducts(data);
+        renderCategories(data);
+        filterAndRenderProducts('all');
       } catch (err) {
         console.error(err);
         document.getElementById('products-grid').innerHTML = '<p style="text-align:center; width:100%; color:red;">حدث خطأ في تحميل المنتجات!</p>';
       }
     }
 
+    function renderCategories(products) {
+      const bar = document.getElementById('categories-bar');
+      const categories = [...new Set(products.map(p => p.category || 'أخرى'))];
+
+      let html = `<button class="cat-btn ${activeCategory === 'all' ? 'active' : ''}" onclick="filterAndRenderProducts('all')">الكل</button>`;
+      
+      categories.forEach(cat => {
+        html += `<button class="cat-btn ${activeCategory === cat ? 'active' : ''}" onclick="filterAndRenderProducts('${cat}')">${cat}</button>`;
+      });
+
+      bar.innerHTML = html;
+    }
+
+    function filterAndRenderProducts(category) {
+      activeCategory = category;
+      
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        if (btn.innerText === category || (category === 'all' && btn.innerText === 'الكل')) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      const filtered = category === 'all' ? allProducts : allProducts.filter(p => (p.category || 'أخرى') === category);
+      renderProducts(filtered);
+    }
+
     function renderProducts(products) {
       const grid = document.getElementById('products-grid');
       grid.innerHTML = '';
+
+      if (products.length === 0) {
+        grid.innerHTML = '<p style="text-align:center; width:100%; grid-column: 1/-1; color:#aaa;">لا توجد منتجات في هذه الفئة</p>';
+        return;
+      }
 
       products.forEach(p => {
         const mainImg = (p.images && p.images.length > 0) ? p.images[0] : (p.image || '');
@@ -294,6 +309,7 @@
     function openModal(id) {
       const prod = allProducts.find(p => p.id == id);
       if (!prod) return;
+      currentSelectedProduct = prod;
 
       document.getElementById('form-prod-id').value = prod.id;
       document.getElementById('form-prod-name').value = prod.name;
@@ -301,16 +317,82 @@
       document.getElementById('modal-title').innerText = prod.name;
       document.getElementById('modal-price').innerText = `${prod.price} دج`;
 
-      const images = (prod.images && prod.images.length > 0) ? prod.images : [prod.image];
+      const variantsGroup = document.getElementById('variants-group');
+      const variantSelect = document.getElementById('form-variant');
+      
+      if (prod.variants && prod.variants.length > 0) {
+        variantsGroup.style.display = 'block';
+        variantSelect.innerHTML = '';
+        prod.variants.forEach((v, idx) => {
+          variantSelect.innerHTML += `<option value="${idx}">${v.name}</option>`;
+        });
+      } else {
+        variantsGroup.style.display = 'none';
+      }
+
+      updateModalImagesAndSizes();
+
+      document.getElementById('form-wilaya').selectedIndex = 0;
+      const deliverySelect = document.getElementById('form-delivery');
+      deliverySelect.innerHTML = '<option value="" disabled selected>-- اختر الولاية أولاً ليتحدد السعر --</option>';
+      deliverySelect.disabled = true;
+
+      document.getElementById('order-modal').style.display = 'flex';
+    }
+
+    function onVariantChange() {
+      updateModalImagesAndSizes();
+    }
+
+    function parseSizesString(sizesInput) {
+      let result = [];
+      if (!sizesInput) return result;
+
+      if (Array.isArray(sizesInput)) {
+        return sizesInput.map(s => {
+          if (typeof s === 'object') return s;
+          return parseSingleSizeText(s);
+        });
+      }
+
+      let parts = sizesInput.split(',');
+      parts.forEach(part => {
+        let parsed = parseSingleSizeText(part.trim());
+        if (parsed) result.push(parsed);
+      });
+
+      return result;
+    }
+
+    function parseSingleSizeText(text) {
+      let match = text.match(/^(.*?)\s*\((\d+)\)$/);
+      if (match) {
+        return { size: match[1].trim(), stock: parseInt(match[2]) };
+      } else {
+        return { size: text.trim(), stock: 10 };
+      }
+    }
+
+    function updateModalImagesAndSizes() {
+      const prod = currentSelectedProduct;
+      let activeImages = prod.images || [prod.image];
+      let rawSizes = prod.sizes;
+
+      const variantIdx = document.getElementById('form-variant').value;
+      if (prod.variants && prod.variants[variantIdx]) {
+        const v = prod.variants[variantIdx];
+        if (v.images) activeImages = v.images;
+        if (v.sizes) rawSizes = v.sizes;
+      }
+
       const mainPhoto = document.getElementById('main-photo');
       const thumbsContainer = document.getElementById('thumbs-container');
-      
-      mainPhoto.src = images[0];
+      mainPhoto.src = activeImages[0];
       thumbsContainer.innerHTML = '';
 
-      images.forEach((imgUrl, index) => {
+      activeImages.forEach((imgUrl, index) => {
         const thumb = document.createElement('img');
-        thumb.src = imgUrl; 
+        thumb.src = imgUrl;
         thumb.className = `thumb-img ${index === 0 ? 'active' : ''}`;
         thumb.onclick = function() {
           mainPhoto.src = imgUrl;
@@ -320,27 +402,40 @@
         thumbsContainer.appendChild(thumb);
       });
 
+      const parsedSizes = parseSizesString(rawSizes);
       const sizeSelect = document.getElementById('form-size');
       sizeSelect.innerHTML = '';
-      const sizesList = Array.isArray(prod.sizes) ? prod.sizes : [prod.sizes];
-      sizesList.forEach(s => {
-        sizeSelect.innerHTML += `<option value="${s}">${s}</option>`;
+      
+      parsedSizes.forEach(s => {
+        let disabledAttr = s.stock === 0 ? 'disabled' : '';
+        let stockLabel = s.stock === 0 ? ' - (نفذت الكمية)' : ``;
+        sizeSelect.innerHTML += `<option value="${s.size}" data-stock="${s.stock}" ${disabledAttr}>${s.size}${stockLabel}</option>`;
       });
 
-      document.getElementById('form-qty').value = 1;
-      document.getElementById('form-qty').max = prod.stock || 10;
-      
-      // إعادة ضبط خيارات الولاية والتوصيل
-      const wilayaSelect = document.getElementById('form-wilaya');
-      wilayaSelect.selectedIndex = 0;
-      
-      const deliverySelect = document.getElementById('form-delivery');
-      deliverySelect.innerHTML = '<option value="" disabled selected>-- اختر الولاية أولاً ليتحدد السعر --</option>';
-      deliverySelect.disabled = true;
+      onSizeChange();
+    }
 
+    function onSizeChange() {
+      const sizeSelect = document.getElementById('form-size');
+      const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
+      const qtyInput = document.getElementById('form-qty');
+      const stockHint = document.getElementById('stock-hint');
+
+      if (selectedOption) {
+        const maxStock = parseInt(selectedOption.getAttribute('data-stock')) || 0;
+        qtyInput.max = maxStock;
+        
+        if (maxStock === 0) {
+          stockHint.innerText = `عذراً، هذا المقاس غير متوفر حالياً.`;
+          qtyInput.value = 0;
+        } else {
+          stockHint.innerText = `الكمية المتوفرة: ${maxStock} حبات`;
+          if (parseInt(qtyInput.value) > maxStock || parseInt(qtyInput.value) < 1) {
+            qtyInput.value = 1;
+          }
+        }
+      }
       calculateTotal();
-
-      document.getElementById('order-modal').style.display = 'flex';
     }
 
     function closeModal() {
@@ -357,10 +452,7 @@
       deliverySelect.disabled = false;
       deliverySelect.innerHTML = '';
 
-      // إضافة خيار المنزل
       deliverySelect.innerHTML += `<option value="home">توصيل للمنزل (إلى باب الدار) - ${prices.home} دج</option>`;
-
-      // إضافة خيار المكتب (إذا كان متاحاً في الولاية)
       if (prices.desk > 0) {
         deliverySelect.innerHTML += `<option value="desk">توصيل للمكتب (استلام من المقر) - ${prices.desk} دج</option>`;
       }
@@ -374,10 +466,9 @@
       const subtotal = unitPrice * qty;
 
       const wilayaId = document.getElementById('form-wilaya').value;
-      const deliveryType = document.getElementById('form-delivery').value; // 'home' or 'desk'
+      const deliveryType = document.getElementById('form-delivery').value;
 
       let shippingCost = 0;
-
       if (wilayaId && dhdPricing[wilayaId] && deliveryType) {
         shippingCost = dhdPricing[wilayaId][deliveryType] || 0;
       }
@@ -392,17 +483,29 @@
     async function submitOrder(e) {
       e.preventDefault();
       const btn = document.getElementById('btn-submit');
+      
+      const qty = Number(document.getElementById('form-qty').value);
+      const sizeSelect = document.getElementById('form-size');
+      const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
+      const maxStock = parseInt(selectedOption.getAttribute('data-stock')) || 0;
+
+      if (qty > maxStock || maxStock === 0) {
+        alert('❌ الكمية المطلوبة غير متوفرة في المخزون لهذا المقاس!');
+        return;
+      }
+
       btn.disabled = true;
       btn.innerText = "...جاري تسجيل الطلب";
 
       const unitPrice = Number(document.getElementById('form-prod-price').value);
-      const qty = Number(document.getElementById('form-qty').value);
-      
       const wilayaSelect = document.getElementById('form-wilaya');
       const wilayaText = wilayaSelect.options[wilayaSelect.selectedIndex].text;
       
       const deliverySelect = document.getElementById('form-delivery');
       const deliveryText = deliverySelect.options[deliverySelect.selectedIndex].text;
+
+      const variantSelect = document.getElementById('form-variant');
+      let variantName = variantSelect.options[variantSelect.selectedIndex] ? variantSelect.options[variantSelect.selectedIndex].text : '';
 
       const subtotal = unitPrice * qty;
       const shippingCost = Number(document.getElementById('shipping-cost-display').innerText);
@@ -411,7 +514,8 @@
       const payload = {
         productId: document.getElementById('form-prod-id').value,
         productName: document.getElementById('form-prod-name').value,
-        size: document.getElementById('form-size').value,
+        variant: variantName,
+        size: selectedOption.value,
         quantity: qty,
         fullName: document.getElementById('form-name').value,
         phone: document.getElementById('form-phone').value,
@@ -426,7 +530,7 @@
         await fetch(API_URL, {
           method: "POST",
           mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify(payload)
         });
 
