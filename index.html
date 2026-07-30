@@ -9,23 +9,19 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
     body { background-color: #121212; color: #ffffff; padding-bottom: 50px; }
 
-    /* شاشة الفئة */
     #category-screen { text-align: center; padding: 30px 15px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
     #category-screen h1 { font-size: 2rem; font-weight: 800; margin-bottom: 25px; color: #fff; }
-    .category-card { background: #1e1e1e; border-radius: 20px; overflow: hidden; border: 2px solid #333; cursor: pointer; transition: transform 0.2s; max-width: 350px; width: 100%; }
+    .category-card { background: #1e1e1e; border-radius: 20px; overflow: hidden; border: 2px solid #333; cursor: pointer; transition: transform 0.2s; max-width: 350px; width: 100%; margin-bottom: 15px; }
     .category-card:hover { border-color: #00e676; transform: scale(1.02); }
     .category-card img { width: 100%; height: 250px; object-fit: cover; }
     .category-card .cat-name { padding: 15px; font-size: 1.2rem; font-weight: 700; background: #1a1a1a; }
 
-    /* شاشة المنتجات */
     #products-screen { display: none; padding: 15px; }
     .back-btn { background: #333; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; margin-bottom: 15px; }
     .products-header { text-align: center; margin-bottom: 20px; }
     .products-header h2 { font-size: 1.5rem; font-weight: 800; }
     .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    @media (min-width: 600px) {
-      .products-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 18px; }
-    }
+    @media (min-width: 600px) { .products-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 18px; } }
     .card { background: #1e1e1e; border-radius: 10px; overflow: hidden; border: 1px solid #333; display: flex; flex-direction: column; transition: transform 0.2s; cursor: pointer; }
     .card:hover { border-color: #555; }
     .card-img { width: 100%; height: 180px; object-fit: cover; background: #2a2a2a; }
@@ -34,14 +30,11 @@
     .card-price { color: #00e676; font-size: 1.1rem; font-weight: 800; margin-bottom: 10px; }
     .btn-view { background: #00e676; color: #000; font-weight: 700; border: none; padding: 8px; border-radius: 6px; cursor: pointer; width: 100%; margin-top: auto; text-align: center; font-size: 0.9rem; }
 
-    /* المودال */
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 1000; justify-content: center; align-items: center; padding: 15px; overflow-y: auto; }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; padding: 15px; overflow-y: auto; }
     .modal-content { background: #1e1e1e; border-radius: 15px; width: 100%; max-width: 500px; padding: 20px; max-height: 90vh; overflow-y: auto; position: relative; border: 1px solid #333; }
     .close-btn { position: absolute; top: 15px; left: 15px; font-size: 1.5rem; color: #aaa; cursor: pointer; background: none; border: none; }
-
     .main-photo-container { width: 100%; height: 260px; margin-bottom: 12px; border-radius: 10px; overflow: hidden; background: #2a2a2a; }
     .main-photo { width: 100%; height: 100%; object-fit: cover; }
-
     .thumbs-container { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
     .thumb-img { width: 55px; height: 55px; object-fit: cover; border-radius: 6px; cursor: pointer; border: 2px solid #444; opacity: 0.6; transition: 0.2s; flex-shrink: 0; }
     .thumb-img.active { border-color: #00e676; opacity: 1; }
@@ -50,195 +43,101 @@
     .form-group label { display: block; margin-bottom: 5px; font-size: 0.85rem; color: #ccc; }
     .form-control { width: 100%; padding: 10px; background: #2a2a2a; border: 1px solid #444; color: #fff; border-radius: 8px; font-size: 0.95rem; }
     .form-control:focus { border-color: #00e676; outline: none; }
-
     .stock-warning { font-size: 0.78rem; color: #ff9800; margin-top: 4px; display: block; }
-
     .total-box-info { background: #2a2a2a; padding: 8px 12px; border-radius: 8px; text-align: center; margin-top: 15px; font-size: 0.9rem; color: #aaa; }
     .total-box { background: #1a2e22; border: 1px solid #00e676; padding: 12px; border-radius: 8px; text-align: center; margin-top: 8px; font-size: 1.1rem; font-weight: 700; color: #00e676; }
-    
     .btn-submit { background: #00e676; color: #000; font-weight: 800; border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; font-size: 1.1rem; margin-top: 15px; }
     .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
   </style>
 </head>
 <body>
 
-  <!-- شاشة الفئة -->
   <div id="category-screen">
     <h1>Mhi_store</h1>
     <div id="category-container"></div>
   </div>
 
-  <!-- شاشة المنتجات -->
   <div id="products-screen">
     <button class="back-btn" onclick="goToCategory()">← رجوع للفئات</button>
-    <div class="products-header">
-      <h2 id="products-title">قبعات مسطحة</h2>
-    </div>
+    <div class="products-header"><h2 id="products-title"></h2></div>
     <div id="products-grid" class="products-grid"></div>
   </div>
 
-  <!-- مودال الطلب -->
   <div id="order-modal" class="modal">
     <div class="modal-content">
       <button class="close-btn" onclick="closeModal()">&times;</button>
-      
-      <div class="main-photo-container">
-        <img id="main-photo" class="main-photo" src="" alt="قبعة">
-      </div>
-      
+      <div class="main-photo-container"><img id="main-photo" class="main-photo" src="" alt="قبعة"></div>
       <div id="thumbs-container" class="thumbs-container"></div>
-
-      <h2 id="modal-title" style="margin-bottom: 5px;"></h2>
-      <p id="modal-price" style="color: #00e676; font-weight: 700; margin-bottom: 15px;"></p>
+      <h2 id="modal-title" style="margin-bottom:5px;"></h2>
+      <p id="modal-price" style="color:#00e676;font-weight:700;margin-bottom:15px;"></p>
 
       <form id="orderform" onsubmit="submitOrder(event)">
-        <input type="hidden" id="form-prod-id">
-        <input type="hidden" id="form-secret-name">
-        <input type="hidden" id="form-prod-price">
-
-        <div style="display: flex; gap: 10px;">
-          <div class="form-group" style="flex: 1;">
-            <label>المقاس:</label>
-            <select id="form-size" class="form-control" onchange="onSizeChange()" required></select>
-          </div>
-          <div class="form-group" style="flex: 1;">
-            <label>الكمية:</label>
-            <input type="number" id="form-qty" class="form-control" value="1" min="1" onchange="calculateTotal()" oninput="calculateTotal()" required>
-            <span id="stock-hint" class="stock-warning"></span>
-          </div>
+        <input type="hidden" id="form-prod-id"><input type="hidden" id="form-secret-name"><input type="hidden" id="form-prod-price">
+        <div style="display:flex;gap:10px;">
+          <div class="form-group" style="flex:1;"><label>المقاس:</label><select id="form-size" class="form-control" onchange="onSizeChange()" required></select></div>
+          <div class="form-group" style="flex:1;"><label>الكمية:</label><input type="number" id="form-qty" class="form-control" value="1" min="1" onchange="calculateTotal()" oninput="calculateTotal()" required><span id="stock-hint" class="stock-warning"></span></div>
         </div>
-
-        <div class="form-group">
-          <label>الاسم الكامل:</label>
-          <input type="text" id="form-name" class="form-control" placeholder="اسمك الكامل" required>
+        <div class="form-group"><label>الاسم الكامل:</label><input type="text" id="form-name" class="form-control" placeholder="اسمك الكامل" required></div>
+        <div class="form-group"><label>رقم الهاتف:</label><input type="tel" id="form-phone" class="form-control" placeholder="06XXXXXXXX" required></div>
+        <div style="display:flex;gap:10px;">
+          <div class="form-group" style="flex:1;"><label>الولاية:</label><select id="form-wilaya" class="form-control" onchange="onWilayaChange()" required><option value="" disabled selected>-- اختر الولاية --</option><option value="1">01 - Adrar</option><option value="2">02 - Chlef</option><option value="3">03 - Laghouat</option><option value="4">04 - Oum El Bouaghi</option><option value="5">05 - Batna</option><option value="6">06 - Bejaia</option><option value="7">07 - Biskra</option><option value="8">08 - Bechar</option><option value="9">09 - Blida</option><option value="10">10 - Bouira</option><option value="11">11 - Tamanrasset</option><option value="12">12 - Tébessa</option><option value="13">13 - Tlemcen</option><option value="14">14 - Tiaret</option><option value="15">15 - Tizi Ouzou</option><option value="16">16 - Alger</option><option value="17">17 - Djelfa</option><option value="18">18 - Jijel</option><option value="19">19 - Sétif</option><option value="20">20 - Saïda</option><option value="21">21 - Skikda</option><option value="22">22 - Sidi Bel Abbès</option><option value="23">23 - Annaba</option><option value="24">24 - Guelma</option><option value="25">25 - Constantine</option><option value="26">26 - Médéa</option><option value="27">27 - Mostaganem</option><option value="28">28 - M'Sila</option><option value="29">29 - Mascara</option><option value="30">30 - Ouargla</option><option value="31">31 - Oran</option><option value="32">32 - El Bayadh</option><option value="33">33 - Illizi</option><option value="34">34 - Bordj Bou Arreridj</option><option value="35">35 - Boumerdès</option><option value="36">36 - El Tarf</option><option value="37">37 - Tindouf</option><option value="38">38 - Tissemsilt</option><option value="39">39 - El Oued</option><option value="40">40 - Khenchela</option><option value="41">41 - Souk Ahras</option><option value="42">42 - Tipaza</option><option value="43">43 - Mila</option><option value="44">44 - Aïn Defla</option><option value="45">45 - Naâma</option><option value="46">46 - Aïn Témouchent</option><option value="47">47 - Ghardaïa</option><option value="48">48 - Relizane</option><option value="49">49 - Timimoun</option><option value="50">50 - El Meniaa</option><option value="51">51 - Ouled Djellal</option><option value="52">52 - Beni Abbés</option><option value="53">53 - In Salah</option><option value="55">55 - Touggourt</option><option value="57">57 - EL M'GHAIR</option></select></div>
+          <div class="form-group" style="flex:1;"><label>البلدية:</label><input type="text" id="form-commune" class="form-control" placeholder="البلدية" required></div>
         </div>
-
-        <div class="form-group">
-          <label>رقم الهاتف:</label>
-          <input type="tel" id="form-phone" class="form-control" placeholder="06XXXXXXXX" required>
-        </div>
-
-        <div style="display: flex; gap: 10px;">
-          <div class="form-group" style="flex: 1;">
-            <label>الولاية:</label>
-            <select id="form-wilaya" class="form-control" onchange="onWilayaChange()" required>
-              <option value="" disabled selected>-- اختر الولاية --</option>
-              <option value="1">01 - Adrar</option><option value="2">02 - Chlef</option>
-              <option value="3">03 - Laghouat</option><option value="4">04 - Oum El Bouaghi</option>
-              <option value="5">05 - Batna</option><option value="6">06 - Bejaia</option>
-              <option value="7">07 - Biskra</option><option value="8">08 - Bechar</option>
-              <option value="9">09 - Blida</option><option value="10">10 - Bouira</option>
-              <option value="11">11 - Tamanrasset</option><option value="12">12 - Tébessa</option>
-              <option value="13">13 - Tlemcen</option><option value="14">14 - Tiaret</option>
-              <option value="15">15 - Tizi Ouzou</option><option value="16">16 - Alger</option>
-              <option value="17">17 - Djelfa</option><option value="18">18 - Jijel</option>
-              <option value="19">19 - Sétif</option><option value="20">20 - Saïda</option>
-              <option value="21">21 - Skikda</option><option value="22">22 - Sidi Bel Abbès</option>
-              <option value="23">23 - Annaba</option><option value="24">24 - Guelma</option>
-              <option value="25">25 - Constantine</option><option value="26">26 - Médéa</option>
-              <option value="27">27 - Mostaganem</option><option value="28">28 - M'Sila</option>
-              <option value="29">29 - Mascara</option><option value="30">30 - Ouargla</option>
-              <option value="31">31 - Oran</option><option value="32">32 - El Bayadh</option>
-              <option value="33">33 - Illizi</option><option value="34">34 - Bordj Bou Arreridj</option>
-              <option value="35">35 - Boumerdès</option><option value="36">36 - El Tarf</option>
-              <option value="37">37 - Tindouf</option><option value="38">38 - Tissemsilt</option>
-              <option value="39">39 - El Oued</option><option value="40">40 - Khenchela</option>
-              <option value="41">41 - Souk Ahras</option><option value="42">42 - Tipaza</option>
-              <option value="43">43 - Mila</option><option value="44">44 - Aïn Defla</option>
-              <option value="45">45 - Naâma</option><option value="46">46 - Aïn Témouchent</option>
-              <option value="47">47 - Ghardaïa</option><option value="48">48 - Relizane</option>
-              <option value="49">49 - Timimoun</option><option value="50">50 - El Meniaa</option>
-              <option value="51">51 - Ouled Djellal</option><option value="52">52 - Beni Abbés</option>
-              <option value="53">53 - In Salah</option>
-              <option value="55">55 - Touggourt</option>
-              <option value="57">57 - EL M'GHAIR</option>
-            </select>
-          </div>
-          <div class="form-group" style="flex: 1;">
-            <label>البلدية:</label>
-            <input type="text" id="form-commune" class="form-control" placeholder="البلدية" required>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>العنوان الشخصي:</label>
-          <input type="text" id="form-address" class="form-control" placeholder="العنوان أو الشارع" required>
-        </div>
-
-        <div class="form-group">
-          <label>نوع التوصيل:</label>
-          <select id="form-delivery" class="form-control" onchange="calculateTotal()" required disabled>
-            <option value="" disabled selected>-- اختر الولاية أولاً --</option>
-          </select>
-        </div>
-
-        <div class="total-box-info">
-          سعر المنتجات: <span id="subtotal-display">0</span> دج | التوصيل: <span id="shipping-cost-display">0</span> دج
-        </div>
-        <div class="total-box">
-          المجموع الإجمالي: <span id="total-price-display">0</span> دج
-        </div>
-
+        <div class="form-group"><label>العنوان الشخصي:</label><input type="text" id="form-address" class="form-control" placeholder="العنوان أو الشارع" required></div>
+        <div class="form-group"><label>نوع التوصيل:</label><select id="form-delivery" class="form-control" onchange="calculateTotal()" required disabled><option value="" disabled selected>-- اختر الولاية أولاً --</option></select></div>
+        <div class="total-box-info">سعر المنتجات: <span id="subtotal-display">0</span> دج | التوصيل: <span id="shipping-cost-display">0</span> دج</div>
+        <div class="total-box">المجموع الإجمالي: <span id="total-price-display">0</span> دج</div>
         <button type="submit" id="btn-submit" class="btn-submit">تأكيد الطلب 🛒</button>
       </form>
     </div>
   </div>
 
   <script>
-    const API_URL = https:"//script.google.com/macros/s/AKfycby1F3hAIbe3zmR4clj21iN7uyoU_6EPMEhMJXoZlCVgqKRreQoev4r35dM22HjY_0-J/exec"
+    const API_URL = "https://script.google.com/macros/s/AKfycbzvkM2WnJPja7epFVCgQFvImSVEBCurXAwKDFJbT6Nbqe3CRSv1Nf9Fi6e7ib8j7QAG/exec";
 
     const dhdPricing = {
-      1: { home: 1100, desk: 600 }, 2: { home: 700, desk: 400 }, 3: { home: 900, desk: 500 },
-      4: { home: 900, desk: 400 }, 5: { home: 900, desk: 400 }, 6: { home: 800, desk: 400 },
-      7: { home: 900, desk: 500 }, 8: { home: 1000, desk: 600 }, 9: { home: 600, desk: 400 },
-      10: { home: 700, desk: 400 }, 11: { home: 1100, desk: 600 }, 12: { home: 1000, desk: 400 },
-      13: { home: 650, desk: 400 }, 14: { home: 900, desk: 400 }, 15: { home: 700, desk: 400 },
-      16: { home: 500, desk: 400 }, 17: { home: 900, desk: 500 }, 18: { home: 800, desk: 400 },
-      19: { home: 700, desk: 400 }, 20: { home: 650, desk: 400 }, 21: { home: 800, desk: 400 },
-      22: { home: 500, desk: 200 }, 23: { home: 800, desk: 400 }, 24: { home: 900, desk: 400 },
-      25: { home: 800, desk: 400 }, 26: { home: 650, desk: 400 }, 27: { home: 650, desk: 400 },
-      28: { home: 900, desk: 400 }, 29: { home: 650, desk: 400 }, 30: { home: 900, desk: 400 },
-      31: { home: 650, desk: 400 }, 32: { home: 700, desk: 500 }, 33: { home: 1300, desk: 500 },
-      34: { home: 700, desk: 400 }, 35: { home: 700, desk: 400 }, 36: { home: 900, desk: 400 },
-      37: { home: 1300, desk: 600 }, 38: { home: 800, desk: 400 }, 39: { home: 1000, desk: 500 },
-      40: { home: 900, desk: 500 }, 41: { home: 900, desk: 500 }, 42: { home: 700, desk: 400 },
-      43: { home: 800, desk: 400 }, 44: { home: 650, desk: 400 }, 45: { home: 700, desk: 500 },
-      46: { home: 650, desk: 400 }, 47: { home: 1000, desk: 500 }, 48: { home: 650, desk: 400 },
-      49: { home: 1100, desk: 600 }, 50: { home: 1000, desk: 500 }, 51: { home: 900, desk: 500 },
-      52: { home: 1100, desk: 0 }, 53: { home: 1100, desk: 600 }, 55: { home: 900, desk: 500 },
-      57: { home: 900, desk: 0 }
+      1:{home:1100,desk:600},2:{home:700,desk:400},3:{home:900,desk:500},4:{home:900,desk:400},5:{home:900,desk:400},6:{home:800,desk:400},7:{home:900,desk:500},8:{home:1000,desk:600},9:{home:600,desk:400},10:{home:700,desk:400},11:{home:1100,desk:600},12:{home:1000,desk:400},13:{home:650,desk:400},14:{home:900,desk:400},15:{home:700,desk:400},16:{home:500,desk:400},17:{home:900,desk:500},18:{home:800,desk:400},19:{home:700,desk:400},20:{home:650,desk:400},21:{home:800,desk:400},22:{home:500,desk:200},23:{home:800,desk:400},24:{home:900,desk:400},25:{home:800,desk:400},26:{home:650,desk:400},27:{home:650,desk:400},28:{home:900,desk:400},29:{home:650,desk:400},30:{home:900,desk:400},31:{home:650,desk:400},32:{home:700,desk:500},33:{home:1300,desk:500},34:{home:700,desk:400},35:{home:700,desk:400},36:{home:900,desk:400},37:{home:1300,desk:600},38:{home:800,desk:400},39:{home:1000,desk:500},40:{home:900,desk:500},41:{home:900,desk:500},42:{home:700,desk:400},43:{home:800,desk:400},44:{home:650,desk:400},45:{home:700,desk:500},46:{home:650,desk:400},47:{home:1000,desk:500},48:{home:650,desk:400},49:{home:1100,desk:600},50:{home:1000,desk:500},51:{home:900,desk:500},52:{home:1100,desk:0},53:{home:1100,desk:600},55:{home:900,desk:500},57:{home:900,desk:0}
     };
 
-    let allProducts = [];
-    let categoryImage = "";
-    let currentSelectedProduct = null;
+    let categories = [], allProducts = [], currentCategory = "", currentSelectedProduct = null;
 
-    async function fetchData() {
+    async function fetchCategories() {
       try {
         const res = await fetch(API_URL);
         const data = await res.json();
-        allProducts = data.products || [];
-        categoryImage = data.categoryImage || "";
-        renderCategory();
+        categories = data.categories || [];
+        renderCategories();
       } catch (err) {
         document.getElementById('category-container').innerHTML = '<p style="color:red;">خطأ في التحميل</p>';
       }
     }
 
-    function renderCategory() {
+    function renderCategories() {
       const container = document.getElementById('category-container');
-      container.innerHTML = `
-        <div class="category-card" onclick="goToProducts()">
-          <img src="${categoryImage}" alt="قبعات مسطحة" onerror="this.src='https://via.placeholder.com/350x250/333/fff?text=قبعات+مسطحة'">
-          <div class="cat-name">🛍️ قبعات مسطحة</div>
-        </div>
-      `;
+      if (!categories.length) { container.innerHTML = '<p style="color:#aaa;">لا توجد فئات</p>'; return; }
+      container.innerHTML = '';
+      categories.forEach(cat => {
+        const card = document.createElement('div');
+        card.className = 'category-card';
+        card.innerHTML = `<img src="${cat.image}" alt="${cat.name}" onerror="this.style.display='none'"><div class="cat-name">${cat.name}</div>`;
+        card.onclick = () => fetchProducts(cat.name);
+        container.appendChild(card);
+      });
     }
 
-    function goToProducts() {
-      document.getElementById('category-screen').style.display = 'none';
-      document.getElementById('products-screen').style.display = 'block';
-      renderProducts();
+    async function fetchProducts(categoryName) {
+      try {
+        const res = await fetch(API_URL + "?category=" + encodeURIComponent(categoryName));
+        const data = await res.json();
+        allProducts = data.products || [];
+        currentCategory = categoryName;
+        document.getElementById('products-title').innerText = categoryName;
+        document.getElementById('category-screen').style.display = 'none';
+        document.getElementById('products-screen').style.display = 'block';
+        renderProducts();
+      } catch (err) {
+        alert('خطأ في تحميل المنتجات');
+      }
     }
 
     function goToCategory() {
@@ -249,21 +148,11 @@
     function renderProducts() {
       const grid = document.getElementById('products-grid');
       grid.innerHTML = '';
-      if (allProducts.length === 0) {
-        grid.innerHTML = '<p style="color:#aaa; grid-column: 1/-1; text-align:center;">لا توجد منتجات</p>';
-        return;
-      }
+      if (!allProducts.length) { grid.innerHTML = '<p style="color:#aaa;grid-column:1/-1;text-align:center;">لا توجد منتجات</p>'; return; }
       allProducts.forEach(p => {
         const card = document.createElement('div');
         card.className = 'card';
-        card.innerHTML = `
-          <img class="card-img" src="${p.image}" alt="${p.displayName}" onerror="this.src='https://via.placeholder.com/300/333/fff?text=No+Image'">
-          <div class="card-body">
-            <div class="card-title">${p.displayName}</div>
-            <div class="card-price">${p.price} دج</div>
-            <button class="btn-view" onclick="event.stopPropagation(); openModal(${p.id})">عرض التفاصيل 🛒</button>
-          </div>
-        `;
+        card.innerHTML = `<img class="card-img" src="${p.image}" alt="${p.displayName}" onerror="this.style.display='none'"><div class="card-body"><div class="card-title">${p.displayName}</div><div class="card-price">${p.price} دج</div><button class="btn-view" onclick="event.stopPropagation();openModal(${p.id})">عرض التفاصيل 🛒</button></div>`;
         card.onclick = () => openModal(p.id);
         grid.appendChild(card);
       });
@@ -273,157 +162,113 @@
       const prod = allProducts.find(p => p.id == id);
       if (!prod) return;
       currentSelectedProduct = prod;
-
       document.getElementById('form-prod-id').value = prod.id;
       document.getElementById('form-secret-name').value = prod.secretName;
       document.getElementById('form-prod-price').value = prod.price;
       document.getElementById('modal-title').innerText = prod.displayName;
-      document.getElementById('modal-price').innerText = `${prod.price} دج`;
-
-      const mainPhoto = document.getElementById('main-photo');
-      const thumbsContainer = document.getElementById('thumbs-container');
-      
-      mainPhoto.src = prod.images[0] || prod.image;
-      thumbsContainer.innerHTML = '';
-
-      prod.images.forEach((img, index) => {
+      document.getElementById('modal-price').innerText = prod.price + ' دج';
+      document.getElementById('main-photo').src = prod.images[0] || prod.image;
+      const tc = document.getElementById('thumbs-container');
+      tc.innerHTML = '';
+      prod.images.forEach((img, i) => {
         const thumb = document.createElement('img');
         thumb.src = img;
-        thumb.className = `thumb-img ${index === 0 ? 'active' : ''}`;
-        thumb.onclick = function() {
-          mainPhoto.src = img;
+        thumb.className = 'thumb-img' + (i === 0 ? ' active' : '');
+        thumb.onclick = () => {
+          document.getElementById('main-photo').src = img;
           document.querySelectorAll('.thumb-img').forEach(t => t.classList.remove('active'));
           thumb.classList.add('active');
         };
-        thumbsContainer.appendChild(thumb);
+        tc.appendChild(thumb);
       });
-
-      const sizeSelect = document.getElementById('form-size');
-      sizeSelect.innerHTML = '';
+      const ss = document.getElementById('form-size');
+      ss.innerHTML = '';
       prod.sizes.forEach(s => {
-        let disabledAttr = s.stock === 0 ? 'disabled' : '';
-        sizeSelect.innerHTML += `<option value="${s.size}" data-stock="${s.stock}" ${disabledAttr}>${s.size}${s.stock === 0 ? ' - نفذ' : ''}</option>`;
+        ss.innerHTML += `<option value="${s.size}" data-stock="${s.stock}" ${s.stock === 0 ? 'disabled' : ''}>${s.size}${s.stock === 0 ? ' - نفذ' : ''}</option>`;
       });
-
       document.getElementById('form-wilaya').selectedIndex = 0;
       document.getElementById('form-delivery').innerHTML = '<option value="" disabled selected>-- اختر الولاية أولاً --</option>';
       document.getElementById('form-delivery').disabled = true;
       document.getElementById('form-qty').value = 1;
-
       onSizeChange();
       document.getElementById('order-modal').style.display = 'flex';
     }
 
     function onSizeChange() {
-      const sizeSelect = document.getElementById('form-size');
-      const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
-      const qtyInput = document.getElementById('form-qty');
-      const stockHint = document.getElementById('stock-hint');
-
-      if (selectedOption) {
-        const maxStock = parseInt(selectedOption.getAttribute('data-stock')) || 0;
-        qtyInput.max = maxStock;
-        if (maxStock === 0) {
-          stockHint.innerText = 'عذراً، هذا المقاس غير متوفر';
-          qtyInput.value = 0;
-        } else {
-          stockHint.innerText = `الكمية المتوفرة: ${maxStock}`;
-          if (parseInt(qtyInput.value) > maxStock || parseInt(qtyInput.value) < 1) qtyInput.value = 1;
-        }
+      const so = document.getElementById('form-size').options[document.getElementById('form-size').selectedIndex];
+      const qi = document.getElementById('form-qty');
+      const sh = document.getElementById('stock-hint');
+      if (so) {
+        const max = parseInt(so.getAttribute('data-stock')) || 0;
+        qi.max = max;
+        sh.innerText = max === 0 ? 'عذراً، هذا المقاس غير متوفر' : `الكمية المتوفرة: ${max}`;
+        if (max === 0) qi.value = 0; else if (parseInt(qi.value) > max || parseInt(qi.value) < 1) qi.value = 1;
       }
       calculateTotal();
     }
 
-    function closeModal() {
-      document.getElementById('order-modal').style.display = 'none';
-    }
+    function closeModal() { document.getElementById('order-modal').style.display = 'none'; }
 
     function onWilayaChange() {
-      const wilayaId = document.getElementById('form-wilaya').value;
-      const deliverySelect = document.getElementById('form-delivery');
-      if (!wilayaId || !dhdPricing[wilayaId]) return;
-      const prices = dhdPricing[wilayaId];
-      deliverySelect.disabled = false;
-      deliverySelect.innerHTML = `
-        <option value="home">توصيل للمنزل - ${prices.home} دج</option>
-        ${prices.desk > 0 ? `<option value="desk">توصيل للمكتب - ${prices.desk} دج</option>` : ''}
-      `;
+      const wid = document.getElementById('form-wilaya').value;
+      const ds = document.getElementById('form-delivery');
+      if (!wid || !dhdPricing[wid]) return;
+      const p = dhdPricing[wid];
+      ds.disabled = false;
+      ds.innerHTML = `<option value="home">توصيل للمنزل - ${p.home} دج</option>${p.desk > 0 ? `<option value="desk">توصيل للمكتب - ${p.desk} دج</option>` : ''}`;
       calculateTotal();
     }
 
     function calculateTotal() {
-      const unitPrice = Number(document.getElementById('form-prod-price').value) || 0;
+      const up = Number(document.getElementById('form-prod-price').value) || 0;
       const qty = Number(document.getElementById('form-qty').value) || 1;
-      const subtotal = unitPrice * qty;
-      const wilayaId = document.getElementById('form-wilaya').value;
-      const deliveryType = document.getElementById('form-delivery').value;
-      let shippingCost = 0;
-      if (wilayaId && dhdPricing[wilayaId] && deliveryType) {
-        shippingCost = dhdPricing[wilayaId][deliveryType] || 0;
-      }
-      document.getElementById('subtotal-display').innerText = subtotal;
-      document.getElementById('shipping-cost-display').innerText = shippingCost;
-      document.getElementById('total-price-display').innerText = subtotal + shippingCost;
+      const sub = up * qty;
+      const wid = document.getElementById('form-wilaya').value;
+      const dt = document.getElementById('form-delivery').value;
+      let sc = 0;
+      if (wid && dhdPricing[wid] && dt) sc = dhdPricing[wid][dt] || 0;
+      document.getElementById('subtotal-display').innerText = sub;
+      document.getElementById('shipping-cost-display').innerText = sc;
+      document.getElementById('total-price-display').innerText = sub + sc;
     }
 
     async function submitOrder(e) {
       e.preventDefault();
       const btn = document.getElementById('btn-submit');
       const qty = Number(document.getElementById('form-qty').value);
-      const sizeSelect = document.getElementById('form-size');
-      const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
-      const maxStock = parseInt(selectedOption.getAttribute('data-stock')) || 0;
-      
-      if (qty > maxStock || maxStock === 0) {
-        alert('❌ الكمية غير متوفرة!');
-        return;
-      }
-
-      btn.disabled = true;
-      btn.innerText = '...جاري الإرسال';
-
-      const unitPrice = Number(document.getElementById('form-prod-price').value);
-      const wilayaSelect = document.getElementById('form-wilaya');
-      const wilayaText = wilayaSelect.options[wilayaSelect.selectedIndex].text;
-      const deliverySelect = document.getElementById('form-delivery');
-      const deliveryText = deliverySelect.options[deliverySelect.selectedIndex].text;
-      const subtotal = unitPrice * qty;
-      const shippingCost = Number(document.getElementById('shipping-cost-display').innerText);
-
+      const so = document.getElementById('form-size').options[document.getElementById('form-size').selectedIndex];
+      const max = parseInt(so.getAttribute('data-stock')) || 0;
+      if (qty > max || max === 0) { alert('❌ الكمية غير متوفرة!'); return; }
+      btn.disabled = true; btn.innerText = '...جاري الإرسال';
+      const up = Number(document.getElementById('form-prod-price').value);
+      const wt = document.getElementById('form-wilaya').options[document.getElementById('form-wilaya').selectedIndex].text;
+      const dtt = document.getElementById('form-delivery').options[document.getElementById('form-delivery').selectedIndex].text;
+      const sub = up * qty;
+      const sc = Number(document.getElementById('shipping-cost-display').innerText);
       const payload = {
         productId: document.getElementById('form-prod-id').value,
         secretName: document.getElementById('form-secret-name').value,
-        size: selectedOption.value,
-        quantity: qty,
+        category: currentCategory,
+        size: so.value, quantity: qty,
         fullName: document.getElementById('form-name').value,
         phone: document.getElementById('form-phone').value,
-        wilaya: wilayaText,
-        commune: document.getElementById('form-commune').value,
+        wilaya: wt, commune: document.getElementById('form-commune').value,
         address: document.getElementById('form-address').value,
-        deliveryType: deliveryText,
-        totalPrice: subtotal + shippingCost
+        deliveryType: dtt, totalPrice: sub + sc
       };
-
       try {
-        await fetch(API_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify(payload)
-        });
+        await fetch(API_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
         alert('✅ تم تسجيل طلبك بنجاح!');
-        closeModal();
-        document.getElementById('orderform').reset();
-        fetchData();
+        closeModal(); document.getElementById('orderform').reset();
+        fetchProducts(currentCategory);
       } catch (err) {
         alert('❌ حدث خطأ');
       } finally {
-        btn.disabled = false;
-        btn.innerText = 'تأكيد الطلب 🛒';
+        btn.disabled = false; btn.innerText = 'تأكيد الطلب 🛒';
       }
     }
 
-    fetchData();
+    fetchCategories();
   </script>
 </body>
 </html>
